@@ -159,9 +159,9 @@ Filtering:
 
 ```json
 {
-  "title": "Buy groceries",
-  "description": "Milk, eggs, bread",
-  "status": "pending"
+  "title": "Task Mgt system",
+  "description": "Laravel Developer Assessment",
+  "status": "completed"
 }
 ```
 
