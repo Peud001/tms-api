@@ -1,7 +1,7 @@
 
 # Task Management API (Laravel + Sanctum)
 
-A simple, secure **task management REST API** built using **Laravel 10** and **Sanctum** for authentication.  
+A simple, secure **task management REST API** built using **Laravel 12** and **Sanctum** for authentication.  
 Users can register, login, and manage their personal tasks with full CRUD operations, filtering, validation, and pagination.
 
 ---
