@@ -40,8 +40,17 @@ class TaskController extends Controller
     /**
      * Display the specified task if it belongs to the authenticated user.
      */
-    public function show(Task $task, Request $request)
+    public function show(Request $request, $id)
     {
+        $task = Task::find($id);
+
+        if (!$task) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Task not found'
+            ], 404);
+        }
+
         if ($task->user_id !== $request->user()->id) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
@@ -52,8 +61,17 @@ class TaskController extends Controller
     /**
      * Update the specified task if it belongs to the authenticated user.
      */
-    public function update(StoreTaskRequest $request, Task $task)
+    public function update(StoreTaskRequest $request, $id)
     {
+        $task = Task::find($id);
+
+        if (!$task) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Task not found'
+            ], 404);
+        }
+
         if ($task->user_id !== $request->user()->id) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
@@ -66,8 +84,17 @@ class TaskController extends Controller
     /**
      * Remove the specified task if it belongs to the authenticated user.
      */
-    public function destroy(Task $task, Request $request)
+    public function destroy(Request $request, $id)
     {
+        $task = Task::find($id);
+
+        if (!$task) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Task not found'
+            ], 404);
+        }
+
         if ($task->user_id !== $request->user()->id) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }

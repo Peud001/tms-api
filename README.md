@@ -1,110 +1,109 @@
 
+# Task Management API (Laravel + Sanctum)
 
-##  **Features**
+A simple, secure **task management REST API** built using **Laravel 10** and **Sanctum** for authentication.  
+Users can register, login, and manage their personal tasks with full CRUD operations, filtering, validation, and pagination.
+
+---
+
+##  Features
 
 ### **1. Users**
-
-* Register & login with secure password hashing
-* Authenticated access using **Sanctum API tokens**
+- Register & login with hashed passwords  
+- Authenticated using **Sanctum API tokens**
 
 ### **2. Tasks**
-
 Each task includes:
-
-* `title`
-* `description`
-* `status` (`pending`, `in-progress`, `completed`)
-* `user_id` (owner)
+- `title`
+- `description`
+- `status` (`pending`, `in-progress`, `completed`)
+- `user_id` (task owner)
 
 Users can:
-
-*  Create tasks
-*  Get all tasks (with filtering by status + pagination)
-*  View a single task
-*  Update tasks
-*  Delete tasks
-*  Access *only* their own tasks
+- Create tasks  
+- List their own tasks  
+- Filter by status  
+- View a single task  
+- Update their tasks  
+- Delete their tasks  
+- Access **only their own tasks**
 
 ### **3. Validation**
+- Handled using `StoreTaskRequest` and `UpdateTaskRequest`.
 
-* Task validation handled by **FormRequest** (`StoreTaskRequest`)
-
-### **4. Filtering / Pagination**
-
-* Filter by status:
-  `GET /api/tasks?status=pending`
-* Pagination (10 per page)
+### **4. Filtering & Pagination**
+- `GET /api/tasks?status=pending`  
+- Pagination: **10 per page**
 
 ### **5. Testing**
-
 Feature tests included for:
+- Task creation  
+- Validation errors  
 
-* Task creation
+---
 
+##  Installation
 
-##  **Installation**
+### **1. Clone the Repository**
 
-### **1. Clone repository**
+[GitHub Repository](https://github.com/Peud001/tms-api)
 
-### Clone the Repository
-
-[GitHub Repository](https://github.com/Peud001/tms-api.git)
-
-* bash
+```bash
 git clone https://github.com/Peud001/tms-api.git
 cd tms-api
-
+````
 
 ### **2. Install dependencies**
 
-* bash
+```bash
 composer install
-
+```
 
 ### **3. Setup environment file**
 
-* bash
+```bash
 cp .env.example .env
+```
 
-Configure database in `.env`:
+Edit `.env`:
 
-
+```
 DB_DATABASE=your_database
 DB_USERNAME=your_username
 DB_PASSWORD=your_password
-
+```
 
 ### **4. Generate app key**
 
-* bash
+```bash
 php artisan key:generate
-
+```
 
 ### **5. Run migrations**
 
-* bash
+```bash
 php artisan migrate
-
+```
 
 ### **6. Serve the app**
 
-* bash
+```bash
 php artisan serve
+```
 
+API will be available at:
 
-API is now available at:
-
+```
 http://127.0.0.1:8000
+```
 
+---
 
-
-## ✅ **Authentication**
+##  Authentication
 
 ### **Register**
 
 **POST** `/api/register`
-
-Example:
 
 ```json
 {
@@ -113,55 +112,58 @@ Example:
   "password": "secret",
   "password_confirmation": "secret"
 }
-
+```
 
 ### **Login**
 
 **POST** `/api/login`
 
-* json
+```json
 {
   "email": "john@example.com",
   "password": "secret"
 }
+```
 
+**Response:**
 
-Response includes token:
-
-* json
+```json
 {
-  "token": "your-generated-token"
+  "token": "generated-token-here"
 }
+```
 
+Use the token for all authenticated requests:
 
-Use it in all authenticated requests:
-
+```
 Authorization: Bearer <token>
+```
 
+---
 
-
-## ✅ **Task Endpoints (Authenticated Only)**
+##  Task Endpoints (Authenticated Only)
 
 ### **List all tasks**
 
 **GET** `/api/tasks`
 
-Optional filtering:
+Filtering:
 
-
+```
 /api/tasks?status=pending
+```
 
-
-### **Create task**
+### **Create a task**
 
 **POST** `/api/tasks`
 
-* json
+```json
 {
   "title": "Buy groceries",
   "description": "Milk, eggs, bread",
   "status": "pending"
 }
+```
 
 ### **Get single task**
 
@@ -171,22 +173,24 @@ Optional filtering:
 
 **PUT** `/api/tasks/{id}`
 
-* json
+```json
 {
   "title": "Updated title",
   "status": "completed"
 }
+```
 
 ### **Delete task**
 
 **DELETE** `/api/tasks/{id}`
 
+---
 
-##  **API Error Responses**
+##  API Error Responses
 
-All errors follow this format:
+All errors follow this structure:
 
-* json
+```json
 {
   "status": "error",
   "message": "Error description",
@@ -194,6 +198,7 @@ All errors follow this format:
     "field": ["Validation message"]
   }
 }
+```
 
 | Status  | Meaning                   |
 | ------- | ------------------------- |
@@ -203,45 +208,49 @@ All errors follow this format:
 | **422** | Validation failed         |
 | **500** | Server error              |
 
+---
 
-## ✅ **Project Structure**
+##  Project Structure Highlights
 
 * `TaskResource` → clean API response formatting
-* `storeTaskRequest` & `updateTaskRequest` → validation logic
-* `TaskController` → business logic & authorization
-* `Handler.php` → unified error formatting
-* `routes/api.php` → protected routes with Sanctum middleware
+* `StoreTaskRequest` / `UpdateTaskRequest` → validation logic
+* `TaskController` → business logic & ownership checks
+* `Handler.php` → centralized exception handling
+* `api.php` → routes protected with Sanctum middleware
 
+---
 
-## ✅ **Testing**
+##  Testing
 
-Run all feature tests:
+Run all tests:
 
-* bash
+```bash
 php artisan test
+```
 
-Includes tests for:
+Includes:
 
 * Task creation
-* Validation failures
+* Validation errors
 * Authentication
 
+---
 
-##  **Design Decisions**
+##  Design Approach
 
-* **Sanctum** chosen for lightweight token-based API authentication
+* **Sanctum** chosen for lightweight token-based authentication
 * **FormRequest validation** keeps controllers clean
-* **Centralized error handling** ensures consistent API output
-* **Resource classes** provide structured JSON responses
-* **Ownership checks** guarantee users only manage their own tasks
-* **Pagination** ensures the API can handle large datasets
+* **Task ownership checks** ensure users only manage their own resources
+* **Resource classes** give consistent output
+* **Centralized error handler** produces unified responses
+* **Pagination** ensures scalability
 
+---
 
-## ✅ **Notes**
+##  Notes
 
-* Passwords are automatically hashed using Laravel’s `hashed` cast
-* Sensitive fields (`password`, `remember_token`) are hidden
-* Works with Postman, Hoppscotch, Insomnia, or any API client
-
+* Passwords automatically hashed via `$casts`
+* Sensitive fields hidden (`password`, `remember_token`)
+* Works seamlessly with Postman, Insomnia, Hoppscotch, etc.
 
 
